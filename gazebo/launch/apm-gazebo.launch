@@ -1,0 +1,78 @@
+<launch>
+	<!-- vim: set ft=xml noet : -->
+	<!-- example launch script for ArduPilotMega based FCU's -->
+
+	<arg name="fcu_url" default="udp://127.0.0.1:14551@" />
+	<arg name="gcs_url" default="" />
+	<arg name="tgt_system" default="1" />
+	<arg name="tgt_component" default="1" />
+	<arg name="log_output" default="screen" />
+	<arg name="fcu_protocol" default="v1.0" />
+	<arg name="respawn_mavros" default="false" />
+	<arg name="wall_left_border" default="0.2" />
+	<arg name="wall_right_border" default="4.8" />
+	<arg name="wall_upper_border" default="7" />
+
+
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" value="/home/mike/graffiti-drone/gazebo/iris_graffiti.world"/>
+	
+	</include>
+
+
+	<include file="$(find mavros)/launch/node.launch">
+		<arg name="pluginlists_yaml" value="/home/mike/graffiti-drone/gazebo/launch/apm_pluginlists.yaml" />
+		<arg name="config_yaml" value="/home/mike/graffiti-drone/gazebo/launch/apm_config.yaml" />
+
+		<arg name="fcu_url" value="$(arg fcu_url)" />
+		<arg name="gcs_url" value="$(arg gcs_url)" />
+		<arg name="tgt_system" value="$(arg tgt_system)" />
+		<arg name="tgt_component" value="$(arg tgt_component)" />
+		<arg name="log_output" value="$(arg log_output)" />
+		<arg name="fcu_protocol" value="$(arg fcu_protocol)" />
+		<arg name="respawn_mavros" default="$(arg respawn_mavros)" />
+	</include>
+
+	<node pkg="ros_graffiti_pose" type="node" name="graffiti_pose" output="screen" respawn="true">
+		<param name="use_fakegps" value="false"/>
+		<param name="use_extnav" value="true"/>
+		<param name="left_laser_index" value="0"/>
+        <param name="right_laser_index" value="1"/>
+		<param name="altimeter_pitch_angle" value="6"/>
+		<param name="use_velocity" value="false"/>
+		<param name="send_gazebo_velocity" value="false"/>
+		<param name="positions_list" value="0.0;1.5;3.14;4.9"/>
+		<param name="pozyx_distance_from_wall" value="3"/>
+		<param name="wall_left_border" value="$(arg wall_left_border)"/>
+		<param name="wall_right_border" value="$(arg wall_right_border)"/>
+		<param name="wall_upper_border" value="$(arg wall_upper_border)"/>
+		<param name="save_position_data" value="false"/>
+		<param name="turn_on_raw_logging" value="true"/>
+	</node>
+
+	<node pkg="ros_graffiti_pose" type="init" name="graffiti_init" output="screen" respawn="true">
+		<param name="extnav_latitude" value="1.5"/>
+		<param name="extnav_longitude" value="2.5"/>
+		<param name="extnav_altitude" value="3.5"/>
+	</node> 
+
+	<node pkg="ros_graffiti_pose" type="navi" name="graffiti_navi" output="screen" respawn="true">
+		<param name="distance_to_wall" value="0.45"/>
+		<param name="svg_file_name" value="/home/mike/graffiti-drone/svg/ae-simple.svg"/>
+		<param name="max_painting_distance_from_wall" value="666.6"/>
+		<param name="max_painting_deviation" value="666.2"/>
+		<param name="sprayer_servo_id" value="7"/>
+		<param name="sprayer_servo_paint_pwm" value="1150"/>
+		<param name="sprayer_servo_stop_pwm" value="2000"/>
+		<param name="wall_left_border" value="$(arg wall_left_border)"/>
+		<param name="wall_right_border" value="$(arg wall_right_border)"/>
+		<param name="wall_upper_border" value="$(arg wall_upper_border)"/>
+		
+	</node>
+
+	<node pkg="ros_gazebo_teraranger" type="node" name="gazebo_teraranger" output="screen" respawn="true"/> 
+
+	<node pkg="ros_graffiti_visual" type="node" name="graffiti_visual" output="screen" respawn="true">
+	</node>
+
+</launch>

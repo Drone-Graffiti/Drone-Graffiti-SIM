@@ -1,0 +1,25 @@
+<launch>
+	<!-- vim: set ft=xml noet : -->
+	<!-- example launch script for ArduPilotMega based FCU's -->
+
+<!--	<arg name="teraraners_port" default="/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00"/>
+-->
+
+	<arg name="teraraners_port" default="/dev/ttyACM0" />
+
+     <node pkg="teraranger_array" type="teraranger_evo" name="hub_parser" respawn="true" output="screen">
+          <param name="portname" value="$(arg teraraners_port)" />
+          <param name="Rate" value="2" />
+          <param name="Sequence_mode" value="1" />
+          <param name="IMU_mode" value="0" />
+          <param name="Sensor_type_port_0" value="2" />
+          <param name="Sensor_type_port_1" value="2" />
+          <param name="Sensor_type_port_2" value="2" />
+          <param name="Sensor_type_port_3" value="2" />
+          <param name="Sensor_type_port_4" value="2" />
+          <param name="Sensor_type_port_5" value="2" />
+          <param name="Sensor_type_port_6" value="2" />
+          <param name="Sensor_type_port_7" value="2" />
+     </node>
+
+</launch>

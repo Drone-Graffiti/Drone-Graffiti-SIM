@@ -1,0 +1,34 @@
+plugin_blacklist:
+# common
+- actuator_control
+- ftp
+- safety_area
+- hil
+# extras
+- altitude
+- debug_value
+- image_pub
+- px4flow
+- vibration
+- vision_speed_estimate
+- vision_pose_estimate
+- mocap_pose_estimate
+- fake_gps
+- distance_sensor
+- mission
+- safety_area
+- image
+- mocap
+- adsb
+- cam_imu_sync
+- gps_rtk
+- obstacle_distance
+- rangefinder
+- trajectory
+- waypoint
+- wind_estimation
+
+
+
+plugin_whitelist: []
+#- 'sys_*'

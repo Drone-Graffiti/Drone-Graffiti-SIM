@@ -1,0 +1,41 @@
+<launch>
+	<!-- vim: set ft=xml noet : -->
+	<!-- example launch script for ArduPilotMega based FCU's -->
+
+	<arg name="teraraners_port" default="/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00"/>
+<!--	<arg name="pozyx_port" default="/dev/serial/by-id/usb-Pozyx_Labs_Pozyx_Virtual_ComPort_in_FS_Mode_328234693037-if00"/>-->
+        <arg name="pozyx_port" default="/dev/ttyACM1"/>
+	<arg name="altimeter_port" default="/dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DO01J5J6-if00-port0"/>
+	<arg name="fcu_url" default="/dev/ttyS4:921600" />
+	<arg name="gcs_url" default="udp-b://:14556@" />
+	<arg name="tgt_system" default="113" />
+	<arg name="tgt_component" default="1" />
+	<arg name="log_output" default="screen" />
+	<arg name="fcu_protocol" default="v1.0" />
+	<arg name="respawn_mavros" default="false" />
+	
+
+	
+      <!--include file="$(find mavros)/launch/node.launch">
+		<arg name="pluginlists_yaml" value="/home/graffiti/graffiti-drone/gazebo/launch/apm_pluginlists.yaml" />
+		<arg name="config_yaml" value="/home/graffiti/graffiti-drone/gazebo/launch/apm_config.yaml" />
+
+		<arg name="fcu_url" value="$(arg fcu_url)" />
+		<arg name="gcs_url" value="$(arg gcs_url)" />
+		<arg name="tgt_system" value="$(arg tgt_system)" />
+		<arg name="tgt_component" value="$(arg tgt_component)" />
+		<arg name="log_output" value="$(arg log_output)" />
+		<arg name="fcu_protocol" value="$(arg fcu_protocol)" />
+		<arg name="respawn_mavros" default="$(arg respawn_mavros)" />
+	</include--> 
+
+
+	<node pkg="ros_graffiti_pose" type="node" name="graffiti_pose" output="screen">
+		<param name="use_fakegps" value="false"/>
+		<param name="use_extnav" value="true"/>
+		<param name="distance_to_wall" value="1.5"/>
+		<param name="svg_file_name" value=""/>
+		<param name="left_laser_index" value="4"/>
+        <param name="right_laser_index" value="3"/>
+	</node>
+</launch>

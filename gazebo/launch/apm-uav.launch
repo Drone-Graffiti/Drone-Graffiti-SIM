@@ -1,0 +1,103 @@
+<launch>
+	<!-- vim: set ft=xml noet : -->
+	<!-- example launch script for ArduPilotMega based FCU's -->
+
+	<arg name="teraraners_port" default="/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00"/>
+<!--	<arg name="pozyx_port" default="/dev/serial/by-id/usb-Pozyx_Labs_Pozyx_Virtual_ComPort_in_FS_Mode_328234693037-if00"/>-->
+        <arg name="pozyx_port" default="/dev/ttyACM1"/>
+	<arg name="altimeter_port" default="/dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DO01J5J6-if00-port0"/>
+	<arg name="fcu_url" default="/dev/ttyS4:921600" />
+	<arg name="gcs_url" default="udp-b://:14556@" />
+	<arg name="tgt_system" default="113" />
+	<arg name="tgt_component" default="1" />
+	<arg name="log_output" default="screen" />
+	<arg name="fcu_protocol" default="v1.0" />
+	<arg name="respawn_mavros" default="false" />
+	<arg name="wall_left_border" default="0.2" />
+	<arg name="wall_right_border" default="3.5" />
+	<arg name="wall_upper_border" default="4" />
+	
+      <include file="$(find mavros)/launch/node.launch">
+		<arg name="pluginlists_yaml" value="/home/graffiti/graffiti-drone/gazebo/launch/apm_pluginlists.yaml" />
+		<arg name="config_yaml" value="/home/graffiti/graffiti-drone/gazebo/launch/apm_config.yaml" />
+
+		<arg name="fcu_url" value="$(arg fcu_url)" />
+		<arg name="gcs_url" value="$(arg gcs_url)" />
+		<arg name="tgt_system" value="$(arg tgt_system)" />
+		<arg name="tgt_component" value="$(arg tgt_component)" />
+		<arg name="log_output" value="$(arg log_output)" />
+		<arg name="fcu_protocol" value="$(arg fcu_protocol)" />
+		<arg name="respawn_mavros" default="$(arg respawn_mavros)" />
+	</include> 
+
+
+	<node pkg="ros_graffiti_pose" type="node" name="graffiti_pose" output="screen" respawn="true">
+		<param name="use_fakegps" value="false"/>
+		<param name="use_extnav" value="true"/>
+		<param name="use_velocity" value="false"/>
+		<param name="left_laser_index" value="2"/>
+       	<param name="right_laser_index" value="5"/>
+		<param name="altimeter_pitch_angle" value="0"/>
+<!--		<param name="positions_list" value="0.0;1.5;3.14;4.8"/> -->
+		<param name="positions_list" value="0.0;5.0" />
+		<param name="pozyx_distance_from_wall" value="0.25"/>
+
+		<param name="wall_left_border" value="$(arg wall_left_border)"/>
+		<param name="wall_right_border" value="$(arg wall_right_border)"/>
+		<param name="wall_upper_border" value="$(arg wall_upper_border)"/>
+
+		<param name="turn_on_raw_logging" value="true"/>
+	</node>
+
+	<node pkg="ros_graffiti_pose" type="init" name="graffiti_init" output="screen" >
+		<param name="extnav_latitude" value="1.5"/>
+		<param name="extnav_longitude" value="2.5"/>
+		<param name="extnav_altitude" value="3.5"/>
+	</node>
+
+	<node pkg="ros_graffiti_pose" type="navi" name="graffiti_navi" respawn="true" output="screen">
+		<param name="distance_to_wall" value="0.36"/>
+		<param name="svg_file_name" value="/home/graffiti/graffiti-drone/svg/ae-first-part-l.svg"/>
+		<param name="max_painting_distance_from_wall" value="0.75"/>
+		<param name="max_painting_deviation" value="0.4"/>
+		<param name="sprayer_servo_id" value="11"/>
+		<param name="sprayer_servo_paint_pwm" value="1150"/>
+		<param name="sprayer_servo_stop_pwm" value="2000"/>
+		<param name="wall_left_border" value="$(arg wall_left_border)"/>
+		<param name="wall_right_border" value="$(arg wall_right_border)"/>
+		<param name="wall_upper_border" value="$(arg wall_upper_border)"/>
+	</node>
+	
+	<!-- Start sf11_node --> 
+	<node name="sf11_node" ns="sf11" pkg="sf11_node" type="sf11_node" respawn="true" output="screen">
+		<param name="portname" type="string" value="$(arg altimeter_port)"/> 
+		<param name="topic" type="string" value="/paint/laser/alt" />
+	</node>
+
+	<!-- Start pozyx node -->
+	<node pkg="ros_pozyx" type="pozyx_1d_pub.py" respawn="true" name="pozyx_1d_pub" output="log">
+		<param name="serial" value="$(arg pozyx_port)" />
+	   <!-- <param name="names_list" value="0x673b;0x671d;0x6765;0x6758"/> -->
+		<param name="names_list" value="0x673b;0x6758"/>
+	</node> 
+
+     <node pkg="teraranger_array" type="teraranger_evo" name="hub_parser" respawn="true" output="screen">
+          <param name="portname" value="$(arg teraraners_port)" />
+          <param name="Rate" value="2" />
+          <param name="Sequence_mode" value="1" />
+          <param name="IMU_mode" value="0" />
+          <param name="Sensor_type_port_0" value="2" />
+          <param name="Sensor_type_port_1" value="2" />
+          <param name="Sensor_type_port_2" value="2" />
+          <param name="Sensor_type_port_3" value="2" />
+          <param name="Sensor_type_port_4" value="2" />
+          <param name="Sensor_type_port_5" value="2" />
+          <param name="Sensor_type_port_6" value="2" />
+          <param name="Sensor_type_port_7" value="2" />
+     </node>
+
+	 <node pkg="ros_graffiti_visual" type="node" name="graffiti_visual" output="screen" respawn="true">
+	 </node>
+
+
+</launch>
