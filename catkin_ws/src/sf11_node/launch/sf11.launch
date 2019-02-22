@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>   
+  <!-- Start sf11_node --> 
+  <node name="sf11_node" ns="sf11" pkg="sf11_node" type="sf11_node" output="screen">
+    <param name="portname" type="string" value="/dev/ttyUSB0" /> 
+    <param name="topic" type="string" value="/out" />
+  </node>
+
+ <!-- I2C protocol -->
+ <!--
+ <node name="sf11_node" ns="sf11" pkg="sf11_node" type="sf11_node_i2c" respawn="true" output="screen">
+      <param name="topic" type="string" value="/paint/laser/alt" />
+       <param name="i2c_bus" type="string" value="/dev/i2c-5" />
+      <param name="i2c_address" type="string" value="0x66"/>
+  </node>
+-->
+
+
+</launch>

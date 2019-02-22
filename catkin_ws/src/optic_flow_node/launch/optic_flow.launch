@@ -1,0 +1,14 @@
+<launch>
+	<!-- vim: set ft=xml noet : -->
+	<!-- example launch script for ArduPilotMega based FCU's -->
+
+<!--	<arg name="teraraners_port" default="/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00"/>
+-->
+
+     <arg name="portname" default="/dev/ttyUSB0" />
+
+     <node pkg="optic_flow_node" type="optic_flow_node" name="optic_flow_node" respawn="true" output="screen">
+          <param name="portname" value="$(arg portname)" />
+     </node>
+
+</launch>

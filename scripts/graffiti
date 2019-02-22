@@ -1,0 +1,25 @@
+#!/bin/sh
+
+export ROS_IP=`hostname -I`
+
+. /home/graffiti/graffiti-drone/catkin_ws/devel/setup.sh
+
+sleep 5
+
+case $1 in
+  start)
+    echo 'Starting ROS graffiti launch /home/graffiti/graffiti-drone'
+    /opt/ros/kinetic/bin/roslaunch /home/graffiti/graffiti-drone/gazebo/launch/apm-uav.launch > /dev/null 2>&1 &
+  ;;
+  stop)
+    echo 'Stopping ROS graffiti launch'
+    kill -2 `pgrep roslaunch`
+  ;;
+  restart|force-reload)
+        $0 stop
+        sleep 1
+        $0 start
+  ;;
+esac
+
+exit 0

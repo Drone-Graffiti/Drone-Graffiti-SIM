@@ -1,0 +1,9 @@
+<library path="lib/librviz_graffiti_plugin">
+  <class name="rviz_graffiti_plugin/Graffiti"
+         type="rviz_graffiti_plugin::GraffitiPanel"
+         base_class_type="rviz::Panel">
+    <description>
+      A panel widget.
+    </description>
+  </class>
+</library>

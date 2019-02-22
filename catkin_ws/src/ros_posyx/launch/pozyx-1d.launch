@@ -1,0 +1,24 @@
+<launch>
+	<!-- vim: set ft=xml noet : -->
+
+<!--
+	<node pkg="ros_pozyx" type="pozyx_1d_pub.py" name="pozyx_1d_pub" output="screen">
+	
+		<param name="serial" value="/dev/ttyACM0"/>
+	
+
+		<param name="names_list" value="0x673b;0x671d;0x6765;0x6758"/>
+		<param name="positions_list" value="0.0;1.38;2.6;4.05"/>
+
+		<param name="max_num_of_outliers" value="2" />
+		<param name="outlier_treshold" value="1.0" />
+		
+	
+	</node>
+        -->
+        <node pkg="ros_pozyx" type="ros_pozyx_node" name="ros_pozyx" output="screen" respawn="true">
+                <param name="i2c_bus" value="/dev/i2c-5"/>
+                <param name="names_list" value="0x673b;0x671d;0x6765;0x6758"/>
+                <param name="loop_rate" value="40" />
+        </node>
+</launch>
